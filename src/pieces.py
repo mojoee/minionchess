@@ -1,0 +1,1 @@
+class piece(pg.sprite.Sprite):
