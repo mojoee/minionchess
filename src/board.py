@@ -42,3 +42,6 @@ class Tile(pg.sprite.Sprite):
 
     def change_color(self, color):
         self.color = color
+    
+    def highlight(self):
+        pass
