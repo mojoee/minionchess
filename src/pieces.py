@@ -13,21 +13,26 @@ class Pieces(Enum):
 
 
 class Side(pg.sprite.Group):
-    def __init__(self, color) -> None:
+    def __init__(self, color, start_formation, Board) -> None:
         pg.sprite.Group.__init__(self)
         # each side should have 8 pawns, 2 castles, 2 knights, 2 bishops,
         # 1 queen, 1 king; they need to be fit to their positions
+        self.start_formation = start_formation
         for p in Pieces:
-            path = f"resources/{color}/{p.name}.jpg"
-            new_piece = Piece(path, p)
-            self.add(new_piece)
+            path = f"resources/{color}/{p.name}.png"
+            positions = start_formation[p.name]
+            for pos in positions:
+                new_piece = Piece(path, p, Board.tiles[pos[0]][pos[1]])
+                self.add(new_piece)
 
 
 class Piece(pg.sprite.Sprite):
-    def __init__(self, image_path, type) -> None:
+    def __init__(self, image_path, type, tile) -> None:
         super().__init__()
         self.image, self.rect = load_image(image_path, -1)
         self.type = Pieces(type)
+        self.rect.x = tile.rect.x
+        self.rect.y = tile.rect.y
 
     def move(self):
         pass

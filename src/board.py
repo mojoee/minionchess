@@ -15,6 +15,7 @@ class Board(pg.sprite.Group):
 
     def make_tiles(self, offset_x, offset_y):
         for i in range(8):
+            self.tiles.append([])
             for j in range(8):
                 if (j+i) % 2 == 0:
                     color = WHITE
@@ -24,6 +25,7 @@ class Board(pg.sprite.Group):
                             offset_x + j * self.edge_size,
                             offset_y + i * self.edge_size)
                 self.add(tile)
+                self.tiles[i].append(tile)
 
 
 class Tile(pg.sprite.Sprite):
