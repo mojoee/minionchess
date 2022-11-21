@@ -26,6 +26,10 @@ class Board(pg.sprite.Group):
                 self.add(tile)
                 self.tiles[i].append(tile)
 
+    def remove_highlights(self):
+        for tile in self.sprites():
+            tile.reset()
+
 
 class Tile(pg.sprite.Sprite):
     def __init__(self, color, edge_size, offset_x, offset_y, horizontal, vertical) -> None:
@@ -41,6 +45,7 @@ class Tile(pg.sprite.Sprite):
         self.id_vertical = vertical
         self.id_horizontal = horizontal
         self.selected = False
+        self.choice = False
 
     def change_color(self, color):
         self.color = color
@@ -50,7 +55,13 @@ class Tile(pg.sprite.Sprite):
         self.image.fill((102, 255, 0))
         self.selected = True
 
-    def deselect(self):
+    def show_choice(self):
+        # self.color = (102, 255, 0)
+        self.image.fill((128,128,128))
+        self.choice = True
+
+    def reset(self):
         # self.color = (102, 255, 0)
         self.image.fill(self.color)
         self.selected = False
+        self.choice = False

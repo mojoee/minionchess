@@ -43,6 +43,7 @@ class Controller():
         self.p1 = None  # white
         self.p2 = None  # black
         self.cfg = Config()
+        self.selected_figure = None
 
 
     def initialize_game(self):

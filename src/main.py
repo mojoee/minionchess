@@ -26,6 +26,7 @@ if __name__ == "__main__":
                 x, y = pg.mouse.get_pos()
                 cntrl.make_move()
                 if cntrl.turn == "white":
+                    # check if figures are selected
                     for spr in cntrl.p1.sprites():
                         if spr.rect.collidepoint(x, y) and spr.tile.selected:
                             spr.tile.deselect()
@@ -33,8 +34,13 @@ if __name__ == "__main__":
                             spr.tile.highlight()
                             tile = spr.get_possible_destination()
                             tile = cntrl.board.tiles[tile[0]][tile[1]]
-                            spr.move(tile.rect.x, tile.rect.y)
-                            spr.tile = tile
+                            cntrl.selected_figure = spr
+                            tile.show_choice()
+                    for spr in cntrl.board.sprites():
+                        if spr.rect.collidepoint(x, y) and spr.choice:
+                            cntrl.selected_figure.move(tile.rect.x, tile.rect.y)
+                            cntrl.selected_figure.tile = spr
+                            cntrl.board.remove_highlights()
 
             elif event.type == pg.MOUSEBUTTONUP:
                 pass
