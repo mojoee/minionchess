@@ -2,7 +2,7 @@
 
 a chess game with minions as figures
 
-![Minion Chess GUI](./docs/MinionChess.png)
+![Minion Chess GUI](./docs/minionchess.gif)
 
 # todos
 * put sprites in the right position --> done
