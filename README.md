@@ -2,6 +2,7 @@
 
 a chess game with minions as figures
 
+![alt text]("./docs/MinionChess.png")
 
 # todos
 * put sprites in the right position --> done
