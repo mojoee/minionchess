@@ -36,7 +36,7 @@ moves = {
 class Controller():
     def __init__(self) -> None:
         self.game_on = True
-        self.turn = "white"
+        self.current_player = None
         self.clock = None
         self.screen = None
         self.board = None
@@ -55,15 +55,16 @@ class Controller():
         self.board = Board(self.cfg.board_size, (self.cfg.screen_width-self.cfg.board_size)/2, (self.cfg.screen_height - self.cfg.board_size)/2)
         self.p1 = Side("male", white_start_formation, self.board)
         self.p2 = Side("female", black_start_formation, self.board)
+        self.current_player = self.p1
 
     def show_moves(self):
         pass
 
     def change_turn(self):
-        if self.turn == "white":
-            self.turn = "black"
+        if self.current_player == self.p1:
+            self.current_player = self.p2
         else:
-            self.turn = "white"
+            self.current_player = self.p1
 
     def make_move(self):
         pass
