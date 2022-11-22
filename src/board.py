@@ -30,6 +30,9 @@ class Board(pg.sprite.Group):
         for tile in self.sprites():
             tile.reset()
 
+    def convert_ids_to_tiles(self, ids: list):
+        pass
+
 
 class Tile(pg.sprite.Sprite):
     def __init__(self, color, edge_size, offset_x, offset_y, horizontal, vertical) -> None:
@@ -81,3 +84,5 @@ class Tile(pg.sprite.Sprite):
         self.image.set_alpha(255)
         self.selected = False
         self.choice = False
+
+    

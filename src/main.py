@@ -24,18 +24,19 @@ if __name__ == "__main__":
                 cntrl.game_on = False
             elif event.type == pg.MOUSEBUTTONDOWN:
                 x, y = pg.mouse.get_pos()
-                    # check if figures are selected
+                # check if figures are selected
                 for spr in cntrl.current_player.sprites():
                     if spr.rect.collidepoint(x, y) and spr.tile.selected:
                         cntrl.board.remove_highlights()
                     elif spr.rect.collidepoint(x, y):
+                        cntrl.selected_figure = spr
                         spr.tile.highlight()
                         possible_moves = spr.get_possible_moves()
                         possible_throws = spr.get_possible_throws()
                         for tile in possible_moves:
                             tile = cntrl.board.tiles[tile[0]][tile[1]]
-                            cntrl.selected_figure = spr
-                            tile.show_choice()
+                            if not tile.occupied:
+                                tile.show_choice()
                         for tile in possible_throws:
                             tile = cntrl.board.tiles[tile[0]][tile[1]]
                             # cntrl.selected_figure = spr

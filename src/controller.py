@@ -80,3 +80,7 @@ class Controller():
     def remove_figure(self, spr):
         spr.kill()
 
+    def check_for_block(self, moves):
+        pass
+
+
