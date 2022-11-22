@@ -46,6 +46,14 @@ class Tile(pg.sprite.Sprite):
         self.id_horizontal = horizontal
         self.selected = False
         self.choice = False
+        self.occupied = False
+        self.figure = None
+
+    def set_occupied(self):
+        self.occupied = True
+
+    def set_unoccupied(self):
+        self.occupied = False
 
     def change_color(self, color):
         self.color = color
@@ -57,11 +65,19 @@ class Tile(pg.sprite.Sprite):
 
     def show_choice(self):
         # self.color = (102, 255, 0)
-        self.image.fill((128,128,128))
+        # self.image.fill((128,128,128))
+        self.image.set_alpha(175)
+        self.choice = True
+
+    def show_throw(self):
+        # self.color = (255, 0, 0)
+        self.image.fill((255, 0, 0))
+        self.image.set_alpha(175)
         self.choice = True
 
     def reset(self):
         # self.color = (102, 255, 0)
         self.image.fill(self.color)
+        self.image.set_alpha(255)
         self.selected = False
         self.choice = False

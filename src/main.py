@@ -31,14 +31,27 @@ if __name__ == "__main__":
                         cntrl.board.remove_highlights()
                     elif spr.rect.collidepoint(x, y):
                         spr.tile.highlight()
-                        tile = spr.get_possible_destination()
-                        tile = cntrl.board.tiles[tile[0]][tile[1]]
-                        cntrl.selected_figure = spr
-                        tile.show_choice()
+                        possible_moves = spr.get_possible_moves()
+                        possible_throws = spr.get_possible_throws()
+                        for tile in possible_moves:
+                            tile = cntrl.board.tiles[tile[0]][tile[1]]
+                            cntrl.selected_figure = spr
+                            tile.show_choice()
+                        for tile in possible_throws:
+                            tile = cntrl.board.tiles[tile[0]][tile[1]]
+                            # cntrl.selected_figure = spr
+                            if tile.occupied:
+                                tile.show_throw()
                 for spr in cntrl.board.sprites():
                     if spr.rect.collidepoint(x, y) and spr.choice:
-                        cntrl.selected_figure.move(tile.rect.x, tile.rect.y)
+
+                        cntrl.selected_figure.move(spr.rect.x, spr.rect.y)
+                        if spr.occupied:
+                            cntrl.remove_figure(spr.figure)
+                        spr.set_occupied()
+                        cntrl.selected_figure.tile.set_unoccupied()
                         cntrl.selected_figure.tile = spr
+                        spr.figure = cntrl.selected_figure
                         cntrl.board.remove_highlights()
                         cntrl.change_turn()
 

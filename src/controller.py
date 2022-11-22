@@ -68,3 +68,7 @@ class Controller():
 
     def make_move(self):
         pass
+
+    def remove_figure(self, spr):
+        spr.kill()
+
