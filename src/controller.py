@@ -66,8 +66,16 @@ class Controller():
         else:
             self.current_player = self.p1
 
-    def make_move(self):
-        pass
+    def make_move(self, spr):
+        self.selected_figure.move(spr.rect.x, spr.rect.y)
+        if spr.occupied:
+            self.remove_figure(spr.figure)
+        spr.set_occupied()
+        self.selected_figure.tile.set_unoccupied()
+        self.selected_figure.tile = spr
+        spr.figure = self.selected_figure
+        self.board.remove_highlights()
+        self.change_turn()
 
     def remove_figure(self, spr):
         spr.kill()
