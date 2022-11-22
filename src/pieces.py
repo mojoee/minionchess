@@ -59,7 +59,8 @@ class Piece(pg.sprite.Sprite, ABC):
             self.factor = 1
 
     def move(self, x, y):
-        pass
+        self.rect.x = x
+        self.rect.y = y
 
     def get_possible_moves(self):
         pass
@@ -94,3 +95,13 @@ class Pawn(Piece):
         return possible_throws
 
 
+class Rook(Piece):
+    def __init__(self, image_path, fig_type, tile, color) -> None:
+        super().__init__(image_path, fig_type, tile, color)
+
+    def get_possible_moves(self):
+        # or should this be implemented by controller?
+        possible_moves = []
+        # possible_moves.append((self.tile.id_vertical + 1, self.tile.id_horizontal))
+        
+        return possible_moves
