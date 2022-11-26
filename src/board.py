@@ -85,4 +85,9 @@ class Tile(pg.sprite.Sprite):
         self.selected = False
         self.choice = False
 
+    def is_opponent(self, side):
+        if self.occupied and self.figure.side != side:
+            return True
+        else:
+            return False
     

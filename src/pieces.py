@@ -69,7 +69,7 @@ class Piece(pg.sprite.Sprite, ABC):
     def get_possible_moves(self, board):
         pass
 
-    def get_possible_throws(self):
+    def get_possible_throws(self, board):
         return []
 
     def remove(self):
@@ -95,7 +95,7 @@ class Pawn(Piece):
         possible_moves.append((self.tile.id_vertical + (1*self.factor), self.tile.id_horizontal))
         return possible_moves
 
-    def get_possible_throws(self):
+    def get_possible_throws(self, board):
         possible_throws = []
         possible_throws.append((self.tile.id_vertical + (1*self.factor), self.tile.id_horizontal-1))
         possible_throws.append((self.tile.id_vertical + (1*self.factor), self.tile.id_horizontal+1))
@@ -123,7 +123,7 @@ class Castle(Piece):
             possible_moves.append((i, y))
 
         for i in range(y+1, 8):
-            if board.tiles[x][i].occupied:
+            if board.tiles[x][i].occupied and board.tiles[x][i].figure.side != self.side:
                 break
             possible_moves.append((x, i))
         for i in range(y-1, 0, -1):
@@ -132,3 +132,38 @@ class Castle(Piece):
             possible_moves.append((x, i))
 
         return possible_moves
+
+
+    def get_possible_throws(self, board):
+        # or should this be implemented by controller?
+        possible_throws = []
+        # possible_moves.append((self.tile.id_vertical + 1, self.tile.id_horizontal))
+        x = self.tile.id_vertical
+        y = self.tile.id_horizontal
+
+        for i in range(x+1, 8):
+            if board.tiles[i][y].is_opponent(self.side):
+                possible_throws.append((i, y))
+                break
+            if board.tiles[i][y].occupied:
+                break
+        for i in range(x-1, 0, -1):
+            if board.tiles[i][y].is_opponent(self.side):
+                possible_throws.append((i, y))
+                break
+            if board.tiles[i][y].occupied:
+                break
+        for i in range(y+1, 8):
+            if board.tiles[x][i].is_opponent(self.side):
+                possible_throws.append((x, i))
+                break
+            if board.tiles[x][i].occupied:
+                break           
+        for i in range(y-1, 0, -1):
+            if board.tiles[x][i].is_opponent(self.side):
+                possible_throws.append((x, i))
+                break
+            if board.tiles[x][i].occupied:
+                break
+
+        return possible_throws

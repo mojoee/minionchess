@@ -32,7 +32,7 @@ if __name__ == "__main__":
                         cntrl.selected_figure = spr
                         spr.tile.highlight()
                         possible_moves = spr.get_possible_moves(cntrl.board)
-                        possible_throws = spr.get_possible_throws()
+                        possible_throws = spr.get_possible_throws(cntrl.board)
                         for tile in possible_moves:
                             tile = cntrl.board.tiles[tile[0]][tile[1]]
                             if not tile.occupied:
