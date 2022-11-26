@@ -31,7 +31,7 @@ if __name__ == "__main__":
                     elif spr.rect.collidepoint(x, y):
                         cntrl.selected_figure = spr
                         spr.tile.highlight()
-                        possible_moves = spr.get_possible_moves()
+                        possible_moves = spr.get_possible_moves(cntrl.board)
                         possible_throws = spr.get_possible_throws()
                         for tile in possible_moves:
                             tile = cntrl.board.tiles[tile[0]][tile[1]]

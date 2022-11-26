@@ -27,6 +27,10 @@ class Side(pg.sprite.Group):
                     new_piece = Pawn(path, p, Board.tiles[pos[0]][pos[1]], color)
                     Board.tiles[pos[0]][pos[1]].set_occupied()
                     Board.tiles[pos[0]][pos[1]].figure = new_piece
+                elif p.name == "CASTLE":
+                    new_piece = Castle(path, p, Board.tiles[pos[0]][pos[1]], color)
+                    Board.tiles[pos[0]][pos[1]].set_occupied()
+                    Board.tiles[pos[0]][pos[1]].figure = new_piece
                 else:
                     new_piece = Piece(path, p, Board.tiles[pos[0]][pos[1]], color)
                     Board.tiles[pos[0]][pos[1]].set_occupied()
@@ -62,8 +66,11 @@ class Piece(pg.sprite.Sprite, ABC):
         self.rect.x = x
         self.rect.y = y
 
-    def get_possible_moves(self):
+    def get_possible_moves(self, board):
         pass
+
+    def get_possible_throws(self):
+        return []
 
     def remove(self):
         pass
@@ -81,7 +88,7 @@ class Pawn(Piece):
         self.rect.y = y
         self.moved = True
 
-    def get_possible_moves(self):
+    def get_possible_moves(self, board):
         possible_moves = []
         if not self.moved:
             possible_moves.append((self.tile.id_vertical + (2*self.factor), self.tile.id_horizontal))
@@ -95,13 +102,33 @@ class Pawn(Piece):
         return possible_throws
 
 
-class Rook(Piece):
+class Castle(Piece):
     def __init__(self, image_path, fig_type, tile, color) -> None:
         super().__init__(image_path, fig_type, tile, color)
 
-    def get_possible_moves(self):
+    def get_possible_moves(self, board):
         # or should this be implemented by controller?
         possible_moves = []
         # possible_moves.append((self.tile.id_vertical + 1, self.tile.id_horizontal))
-        
+        x = self.tile.id_vertical
+        y = self.tile.id_horizontal
+
+        for i in range(x+1, 8):
+            if board.tiles[i][y].occupied:
+                break
+            possible_moves.append((i, y))
+        for i in range(x-1, 0, -1):
+            if board.tiles[i][y].occupied:
+                break
+            possible_moves.append((i, y))
+
+        for i in range(y+1, 8):
+            if board.tiles[x][i].occupied:
+                break
+            possible_moves.append((x, i))
+        for i in range(y-1, 0, -1):
+            if board.tiles[x][i].occupied:
+                break
+            possible_moves.append((x, i))
+
         return possible_moves
