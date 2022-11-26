@@ -13,6 +13,7 @@ class Pieces(Enum):
     QUEEN = 6
 
 
+
 class Side(pg.sprite.Group):
     def __init__(self, color, start_formation, Board) -> None:
         pg.sprite.Group.__init__(self)
@@ -29,6 +30,10 @@ class Side(pg.sprite.Group):
                     Board.tiles[pos[0]][pos[1]].figure = new_piece
                 elif p.name == "CASTLE":
                     new_piece = Castle(path, p, Board.tiles[pos[0]][pos[1]], color)
+                    Board.tiles[pos[0]][pos[1]].set_occupied()
+                    Board.tiles[pos[0]][pos[1]].figure = new_piece
+                elif p.name == "KNIGHT":
+                    new_piece = Knight(path, p, Board.tiles[pos[0]][pos[1]], color)
                     Board.tiles[pos[0]][pos[1]].set_occupied()
                     Board.tiles[pos[0]][pos[1]].figure = new_piece
                 else:
@@ -52,6 +57,7 @@ class Piece(pg.sprite.Sprite, ABC):
         self.tile = tile
         self.side = color
         self.factor = None
+        self.possible_moves = []
 
         self.set_side()
 
@@ -166,4 +172,38 @@ class Castle(Piece):
             if board.tiles[x][i].occupied:
                 break
 
+        return possible_throws
+
+class Knight(Piece):
+    def __init__(self, image_path, fig_type, tile, color) -> None:
+        super().__init__(image_path, fig_type, tile, color)
+
+    def get_possible_moves(self, board):
+        possible_moves = []
+        x = self.tile.id_vertical
+        y = self.tile.id_horizontal
+        possible_moves.append((x+2, y+1))
+        possible_moves.append((x+2, y-1))
+        possible_moves.append((x-2, y+1))
+        possible_moves.append((x-2, y-1))
+        possible_moves.append((x+1, y+2))
+        possible_moves.append((x+1, y-2))
+        possible_moves.append((x-1, y+2))
+        possible_moves.append((x-1, y-2))
+
+        possible_moves_iterator = possible_moves.copy()
+        for move in possible_moves_iterator:
+            if move[0] < 0 or move[0] > 7:
+                possible_moves.remove(move)
+                continue
+            if move[1] < 0 or move[1] > 7:
+                possible_moves.remove(move)
+        self.possible_moves = possible_moves
+        return possible_moves
+
+    def get_possible_throws(self, board):
+        possible_throws = []
+        for move in self.possible_moves:
+            if board.tiles[move[0]][move[1]].is_opponent(self.side):
+                possible_throws.append(move)
         return possible_throws
