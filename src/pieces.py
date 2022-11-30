@@ -136,68 +136,44 @@ class Pawn(Piece):
         return possible_throws
 
 
+def get_moves_castle(board, x, y):
+    possible_moves = []
+    for i in range(x+1, 8):
+        possible_moves.append((i, y))
+        if board.tiles[i][y].occupied:
+            break
+    for i in range(x-1, -1, -1):
+        possible_moves.append((i, y))
+        if board.tiles[i][y].occupied:
+            break
+    for i in range(y+1, 8):
+        possible_moves.append((x, i))
+        if board.tiles[x][i].occupied:
+            break
+    for i in range(y-1, -1, -1):
+        possible_moves.append((x, i))
+        if board.tiles[x][i].occupied:
+            break
+    return possible_moves
+
 class Castle(Piece):
     def __init__(self, image_path, fig_type, tile, color) -> None:
         super().__init__(image_path, fig_type, tile, color)
 
     def get_possible_moves(self, board):
-        possible_moves = []
+
         x = self.tile.id_vertical
         y = self.tile.id_horizontal
 
-        for i in range(x+1, 8):
-            if board.tiles[i][y].occupied:
-                break
-            possible_moves.append((i, y))
-        for i in range(x-1, 0, -1):
-            if board.tiles[i][y].occupied:
-                break
-            possible_moves.append((i, y))
+        self.possible_moves = get_moves_castle(board, x, y)
 
-        for i in range(y+1, 8):
-            if board.tiles[x][i].occupied and board.tiles[x][i].figure.side != self.side:
-                break
-            possible_moves.append((x, i))
-        for i in range(y-1, 0, -1):
-            if board.tiles[x][i].occupied:
-                break
-            possible_moves.append((x, i))
-
-        return possible_moves
-
+        return self.possible_moves
 
     def get_possible_throws(self, board):
-        # or should this be implemented by controller?
         possible_throws = []
-        # possible_moves.append((self.tile.id_vertical + 1, self.tile.id_horizontal))
-        x = self.tile.id_vertical
-        y = self.tile.id_horizontal
-
-        for i in range(x+1, 8):
-            if board.tiles[i][y].is_opponent(self.side):
-                possible_throws.append((i, y))
-                break
-            if board.tiles[i][y].occupied:
-                break
-        for i in range(x-1, 0, -1):
-            if board.tiles[i][y].is_opponent(self.side):
-                possible_throws.append((i, y))
-                break
-            if board.tiles[i][y].occupied:
-                break
-        for i in range(y+1, 8):
-            if board.tiles[x][i].is_opponent(self.side):
-                possible_throws.append((x, i))
-                break
-            if board.tiles[x][i].occupied:
-                break           
-        for i in range(y-1, 0, -1):
-            if board.tiles[x][i].is_opponent(self.side):
-                possible_throws.append((x, i))
-                break
-            if board.tiles[x][i].occupied:
-                break
-
+        for move in self.possible_moves:
+            if board.tiles[move[0]][move[1]].is_opponent(self.side):
+                possible_throws.append(move)
         return possible_throws
 
 class Knight(Piece):
@@ -229,48 +205,49 @@ class Knight(Piece):
         return possible_throws
 
 
+def get_moves_bishop(x, y, piece, board):
+    possible_moves = []
+    # 4 ways for the diagonals
+    # ++, +-, -+, --
+    for i in range(8-max(x, y)):
+        field = (x+i, y+i)
+        if piece.own_field(field[0], field[1]):
+            continue
+        possible_moves.append(field)
+        if board.tiles[field[0]][field[1]].occupied:
+            break
+    for i in range(min(y, 8-x)):
+        field = (x+i, y-i)
+        if piece.own_field(field[0], field[1]):
+            continue
+        possible_moves.append(field)
+        if board.tiles[field[0]][field[1]].occupied:
+            break
+    for i in range(min(x, 8-y)):
+        field = (x-i, y+i)
+        if piece.own_field(field[0], field[1]):
+            continue
+        possible_moves.append(field)
+        if board.tiles[field[0]][field[1]].occupied:
+            break
+    for i in range(min(x, y)+1):
+        field = (x-i, y-i)
+        if piece.own_field(field[0], field[1]):
+            continue
+        possible_moves.append(field)
+        if board.tiles[field[0]][field[1]].occupied:
+            break
+    return possible_moves
+
 class Bishop(Piece):
     def __init__(self, image_path, fig_type, tile, color) -> None:
         super().__init__(image_path, fig_type, tile, color)
 
     def get_possible_moves(self, board):
-        possible_moves = []
         x = self.tile.id_vertical
         y = self.tile.id_horizontal
-
-        # 4 ways for the diagonals
-        # ++, +-, -+, --
-        for i in range(8-max(x, y)):
-            field = (x+i, y+i)
-            if self.own_field(field[0], field[1]):
-                continue
-            possible_moves.append(field)
-            if board.tiles[field[0]][field[1]].occupied:
-                break
-        for i in range(min(y, 8-x)):
-            field = (x+i, y-i)
-            if self.own_field(field[0], field[1]):
-                continue
-            possible_moves.append(field)
-            if board.tiles[field[0]][field[1]].occupied:
-                break
-        for i in range(min(x, 8-y)):
-            field = (x-i, y+i)
-            if self.own_field(field[0], field[1]):
-                continue
-            possible_moves.append(field)
-            if board.tiles[field[0]][field[1]].occupied:
-                break
-        for i in range(min(x, y)+1):
-            field = (x-i, y-i)
-            if self.own_field(field[0], field[1]):
-                continue
-            possible_moves.append(field)
-            if board.tiles[field[0]][field[1]].occupied:
-                break
-
-        self.possible_moves = possible_moves
-        return possible_moves
+        self.possible_moves = get_moves_bishop(x, y, self, board)
+        return self.possible_moves
 
     def get_possible_throws(self, board):
         possible_throws = []
@@ -282,6 +259,20 @@ class Bishop(Piece):
 class Queen(Piece):
     def __init__(self, image_path, fig_type, tile, color) -> None:
         super().__init__(image_path, fig_type, tile, color)
+
+    def get_possible_moves(self, board):
+        x = self.tile.id_vertical
+        y = self.tile.id_horizontal
+        self.possible_moves = get_moves_bishop(x, y, self, board)
+        self.possible_moves.extend(get_moves_castle(board, x, y))
+        return self.possible_moves
+
+    def get_possible_throws(self, board):
+        possible_throws = []
+        for move in self.possible_moves:
+            if board.tiles[move[0]][move[1]].is_opponent(self.side):
+                possible_throws.append(move)
+        return possible_throws
 
 
 class King(Piece):
