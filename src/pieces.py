@@ -238,36 +238,38 @@ class Bishop(Piece):
         x = self.tile.id_vertical
         y = self.tile.id_horizontal
 
-        min_range = max(x, y)
-        min_range = 6 - min_range
+        # 4 ways for the diagonals
+        # ++, +-, -+, --
+        for i in range(8-max(x, y)):
+            field = (x+i, y+i)
+            if self.own_field(field[0], field[1]):
+                continue
+            possible_moves.append(field)
+            if board.tiles[field[0]][field[1]].occupied:
+                break
+        for i in range(min(y, 8-x)):
+            field = (x+i, y-i)
+            if self.own_field(field[0], field[1]):
+                continue
+            possible_moves.append(field)
+            if board.tiles[field[0]][field[1]].occupied:
+                break
+        for i in range(min(x, 8-y)):
+            field = (x-i, y+i)
+            if self.own_field(field[0], field[1]):
+                continue
+            possible_moves.append(field)
+            if board.tiles[field[0]][field[1]].occupied:
+                break
+        for i in range(min(x, y)+1):
+            field = (x-i, y-i)
+            if self.own_field(field[0], field[1]):
+                continue
+            possible_moves.append(field)
+            if board.tiles[field[0]][field[1]].occupied:
+                break
 
-        for j, i in enumerate(range(x, min_range)):
-            if self.own_field(i, y+j):
-                continue
-            possible_moves.append((i, y+j))
-            if board.tiles[i][y+j].occupied:
-                break
-        for j, i in enumerate(range(x, min_range)):
-            if self.own_field(i, y-j):
-                continue
-            possible_moves.append((i, y-j))
-            if board.tiles[i][y-j].occupied:
-                break
-        for j, i in enumerate(range(x, 1, -1)):
-            if self.own_field(i, y-j):
-                continue
-            possible_moves.append((i, y-j))
-            if board.tiles[i][y-j].occupied:
-                break
-        for j, i in enumerate(range(x, 1, -1)):
-            if self.own_field(i, y+j):
-                continue
-            if x == 7:
-                continue
-            possible_moves.append((i, y+j))
-            if board.tiles[i][y+j].occupied:
-                break
-
+        self.possible_moves = possible_moves
         return possible_moves
 
     def get_possible_throws(self, board):
