@@ -13,7 +13,6 @@ class Pieces(Enum):
     QUEEN = 6
 
 
-
 class Side(pg.sprite.Group):
     def __init__(self, color, start_formation, Board) -> None:
         pg.sprite.Group.__init__(self)

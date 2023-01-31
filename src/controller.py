@@ -1,6 +1,6 @@
 import pygame as pg
 from config import Config
-from pieces import Side
+from pieces import Side, King
 from board import Board
 
 
@@ -44,6 +44,7 @@ class Controller():
         self.p2 = None  # black
         self.cfg = Config()
         self.selected_figure = None
+        self.checkmate = False
 
 
     def initialize_game(self):
@@ -79,8 +80,18 @@ class Controller():
 
     def remove_figure(self, spr):
         spr.kill()
+        if isinstance(spr, King):
+            self.game_over()
+        
 
     def check_for_block(self, moves):
         pass
 
+    def is_King_alive(self):
+        return True
+
+    def game_over(self):
+        self.checkmate = True
+        self.game_on = False
+        print("Game is over")
 

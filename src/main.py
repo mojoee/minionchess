@@ -50,3 +50,19 @@ if __name__ == "__main__":
 
         pg.display.flip()  # Refresh on-screen display
         cntrl.clock.tick(60)         # wait until next frame (at 60 FPS)
+
+    if cntrl.checkmate:
+        background = pg.Surface(cntrl.screen.get_size())
+        background = background.convert()
+        background.fill((255, 255, 0))
+        cntrl.board.draw(background)
+        cntrl.p1.draw(background)
+        cntrl.p2.draw(background)
+        blue = (0, 0, 128)
+        font = pg.font.Font('freesansbold.ttf', 100)
+        text = font.render("Check Mate!!!", False, blue)  # "text", antialias, color
+        textRect = text.get_rect()
+        cntrl.screen.blit(text, textRect)
+        pg.display.update()
+        # cntrl.screen.blit(background, (0, 0))
+        pg.time.wait(5000)
